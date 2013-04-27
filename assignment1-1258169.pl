@@ -1,3 +1,5 @@
+#! /usr/bin/perl -w
+
 #===============================================================================
 #
 #         FILE: assignment1-1258169.pl
@@ -15,17 +17,18 @@
 #      VERSION: 1.0
 #      CREATED: 27/04/2013 16:35:24
 #     REVISION: ---
+#
 #===============================================================================
-
-#! /usr/bin/perl -w
 
 use strict;
 use warnings;
 use Cwd;
 
+
 sub print_usage
 {
 	print <<END;
+
 Usage: {filename} [switches]
 
     -dpath      directory to search for html files            (default: .)
@@ -37,11 +40,35 @@ Usage: {filename} [switches]
 END
 }
 
+
 sub print_version
 {
     print <<END;
+
 ********************************************************************************
  ST2614 Assignment 1, Ver. 1.0 done by Nikolas Tay p1258169 class DISM/FT/2A/02
 ********************************************************************************
+
 END
+}
+
+
+sub scrape_emails
+{
+    my $email_regex = qr{
+        [a-zA-z0-9!#$%&'*+\/=?^_`{|}~-]+
+        (?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*
+        @(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+
+        [a-z0-9](?:[a-z0-9-]*[a-z0-9])?
+    }x; 
+
+    my @input = <STDIN>;
+
+    my $count = 0;
+
+    foreach(@input) {
+        while($_ =~ m/($email_regex)/g) {
+            printf "\n\tgot email #%d: %s", ++$count, $1;
+        }
+    }
 }
