@@ -26,6 +26,7 @@ use Cwd;
 
 my @email_list = &scrape_emails;
 &output_html(\@email_list);
+&output_text(\@email_list);
 
 sub print_usage
 {
@@ -107,4 +108,14 @@ END
 END
 
     close OUTFILE
+}
+
+
+sub output_text
+{
+    my @emails = @{shift;};
+
+    foreach(@emails) {
+        print "$_\n";
+    }
 }
