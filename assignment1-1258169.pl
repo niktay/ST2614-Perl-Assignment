@@ -24,9 +24,8 @@ use strict;
 use warnings;
 use Cwd;
 
-my @email_list = &scrape_emails;
-&output_html(\@email_list);
-&output_text(\@email_list);
+&search_DATA;
+
 
 sub print_usage
 {
@@ -116,6 +115,17 @@ sub output_text
     my @emails = @{shift;};
 
     foreach(@emails) {
+        print "$_\n";
+    }
+}
+
+
+sub search_DATA
+{
+    my $directory = cwd()."/DATA/*.html ".cwd()."/DATA/*.htm";
+    my @filelist = glob $directory;
+
+    foreach(@filelist) {
         print "$_\n";
     }
 }
