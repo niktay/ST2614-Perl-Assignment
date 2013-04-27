@@ -28,10 +28,10 @@ sub print_usage
 	print <<END;
 Usage: {filename} [switches]
 
-    -dpath      directory to search for html files      (default: .)
-    -f[th]      output in text or html mode             (default: text)
+    -dpath      directory to search for html files            (default: .)
+    -f[th]      output in (t)ext or (h)tml mode               (default: text)
     -h          print this message and exit
-    -s[adn]     sort in ascenfing, descending or none   (default: none)
+    -s[adn]     sort in (a)scending, (d)escending or (n)one   (default: none)
     -v          print version and exit
 
 END
