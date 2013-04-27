@@ -23,8 +23,15 @@
 use strict;
 use warnings;
 use Cwd;
+use v5.10;
+no warnings "recursion";
 
-&search_DATA;
+my @html_found = ();
+my @html_files = &search_directory(cwd()."/DATA", \@html_found);
+
+foreach(@html_found) {
+    print "$_\n";
+}
 
 
 sub print_usage
@@ -122,10 +129,37 @@ sub output_text
 
 sub search_DATA
 {
-    my $directory = cwd()."/DATA/*.html ".cwd()."/DATA/*.htm";
-    my @filelist = glob $directory;
+    my $directory   = cwd()."/DATA/*.html ".cwd()."/DATA/*.htm";
+    my @filelist    = glob $directory;
 
     foreach(@filelist) {
         print "$_\n";
     }
+}
+
+
+sub search_directory
+{
+    my $base_dir    = shift;
+    my @files_found = @{shift;};
+
+    my $y           = $base_dir."/*.html ".$base_dir."/*.htm";
+    print "globbing: $y\n";
+    push(@html_found, glob $y);
+    print glob $y;
+    print "\n";
+    my $x           = $base_dir."/*";
+    my @dir_files   = glob $x;
+
+    foreach(@dir_files) {
+        print "recurse($_)\n";
+        
+        foreach my $haha(@files_found) {
+            print "FOUND: $haha\n";
+        }
+        &search_directory($_, \@files_found);
+    }
+
+    print scalar @files_found;
+    print "\n###########################\n";
 }
