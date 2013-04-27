@@ -24,10 +24,8 @@ use strict;
 use warnings;
 use Cwd;
 
-foreach(&scrape_emails) {
-    printf "%s\n", $_;
-}
-
+my @email_list = &scrape_emails;
+&output_html(\@email_list);
 
 sub print_usage
 {
@@ -76,4 +74,37 @@ sub scrape_emails
    }
 
    return @scraped_emails;
+}
+
+
+sub output_html
+{ 
+    my @emails = @{shift;};
+
+    open(OUTFILE, ">", "output.html") or die "Can't open output file:$!";
+
+    print OUTFILE <<END;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Email List</title>
+</head>
+
+<body>
+    <table>
+        <tr><th>Emails</th></tr> 
+END
+    
+    foreach(@emails) {
+        print OUTFILE "\t\t<tr><td><a href=\"mailto:$_\">$_</a></td></tr>\n";
+    }
+
+    print OUTFILE <<END;
+    </table>
+</body>
+</html>
+END
+
+    close OUTFILE
 }
