@@ -24,6 +24,10 @@ use strict;
 use warnings;
 use Cwd;
 
+foreach(&scrape_emails) {
+    printf "%s\n", $_;
+}
+
 
 sub print_usage
 {
@@ -55,20 +59,21 @@ END
 
 sub scrape_emails
 {
-    my $email_regex = qr{
-        [a-zA-z0-9!#$%&'*+\/=?^_`{|}~-]+
-        (?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*
-        @(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+
-        [a-z0-9](?:[a-z0-9-]*[a-z0-9])?
-    }x; 
+    my @scraped_emails      = (); 
+    my $email_regex         = qr{
+                                [a-zA-z0-9!#$%&'*+\/=?^_`{|}~-]+
+                                (?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*
+                                @(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+
+                                [a-z0-9](?:[a-z0-9-]*[a-z0-9])?
+                                }x;
+   my @input                = <STDIN>;
 
-    my @input = <STDIN>;
+   
+   foreach(@input) {
+       while($_ =~ m/($email_regex)/g) {
+           push(@scraped_emails, $1) unless(grep(/$1/, @scraped_emails));
+       }
+   }
 
-    my $count = 0;
-
-    foreach(@input) {
-        while($_ =~ m/($email_regex)/g) {
-            printf "\n\tgot email #%d: %s", ++$count, $1;
-        }
-    }
+   return @scraped_emails;
 }
