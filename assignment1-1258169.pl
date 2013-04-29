@@ -25,10 +25,12 @@ use warnings;
 no warnings "recursion";
 
 my @html_found = ();
-my @html_files = &search_directory("~");
+my @html_files = &search_directory("/");
 
 foreach(@html_found) {
-    print "$_\n";
+    my @email_list   = &scrape_emails($_);
+    print "\nFROM FILE: $_\n";
+    &output_text(\@email_list);
 }
 
 
@@ -69,15 +71,17 @@ sub scrape_emails
                                 @(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+
                                 [a-z0-9](?:[a-z0-9-]*[a-z0-9])?
                                 }x;
-   my @input                = <STDIN>;
+   my @input                = open(INFILE, "<", shift) or 
+                                    die "Can't read input file:$!";
 
    
-   foreach(@input) {
+   foreach(<INFILE>) {
        while($_ =~ m/($email_regex)/g) {
            push(@scraped_emails, $1) unless(grep(/$1/, @scraped_emails));
        }
    }
 
+   close INFILE;
    return @scraped_emails;
 }
 
@@ -120,17 +124,6 @@ sub output_text
     my @emails = @{shift;};
 
     foreach(@emails) {
-        print "$_\n";
-    }
-}
-
-
-sub search_DATA
-{
-    my $directory   = cwd()."/DATA/*.html ".cwd()."/DATA/*.htm";
-    my @filelist    = glob $directory;
-
-    foreach(@filelist) {
         print "$_\n";
     }
 }
